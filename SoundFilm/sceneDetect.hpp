@@ -16,8 +16,6 @@ using namespace std;
 using namespace cv;
 
 void detect(string fname);
-double pixel_mean(Mat frame, double height, double width);
-double pixel_var(Mat frame, double height, double width, double mean);
 double cmpHist(Mat& last, Mat& current);
 void comparePic(string fname1, string fname2);
 
