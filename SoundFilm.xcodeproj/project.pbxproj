@@ -26,6 +26,7 @@
 		D0DECE3C1CE82C2400088659 /* libopencv_ml.3.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DECE371CE82C2400088659 /* libopencv_ml.3.1.0.dylib */; settings = {ASSET_TAGS = (); }; };
 		D0DECE3D1CE82C2400088659 /* libopencv_stitching.3.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DECE381CE82C2400088659 /* libopencv_stitching.3.1.0.dylib */; settings = {ASSET_TAGS = (); }; };
 		D0DECE3E1CE82C2400088659 /* libopencv_superres.3.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DECE391CE82C2400088659 /* libopencv_superres.3.1.0.dylib */; settings = {ASSET_TAGS = (); }; };
+		D0E701F31CF7CD1D0002741B /* addMusic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E701F11CF7CD1D0002741B /* addMusic.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,6 +67,8 @@
 		D0DECE371CE82C2400088659 /* libopencv_ml.3.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_ml.3.1.0.dylib; path = "../../opencv-3.1.0/build/lib/libopencv_ml.3.1.0.dylib"; sourceTree = "<group>"; };
 		D0DECE381CE82C2400088659 /* libopencv_stitching.3.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_stitching.3.1.0.dylib; path = "../../opencv-3.1.0/build/lib/libopencv_stitching.3.1.0.dylib"; sourceTree = "<group>"; };
 		D0DECE391CE82C2400088659 /* libopencv_superres.3.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_superres.3.1.0.dylib; path = "../../opencv-3.1.0/build/lib/libopencv_superres.3.1.0.dylib"; sourceTree = "<group>"; };
+		D0E701F11CF7CD1D0002741B /* addMusic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = addMusic.cpp; sourceTree = "<group>"; };
+		D0E701F21CF7CD1D0002741B /* addMusic.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = addMusic.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 			children = (
 				D0DECDC81CE818D800088659 /* main.cpp */,
 				D0898E611CED4C1B00444F61 /* sceneDetect.cpp */,
+				D0E701F11CF7CD1D0002741B /* addMusic.cpp */,
+				D0E701F21CF7CD1D0002741B /* addMusic.hpp */,
 				D0898E621CED4C1B00444F61 /* sceneDetect.hpp */,
 			);
 			path = SoundFilm;
@@ -217,6 +222,7 @@
 			files = (
 				D0DECDC91CE818D800088659 /* main.cpp in Sources */,
 				D0898E631CED4C1B00444F61 /* sceneDetect.cpp in Sources */,
+				D0E701F31CF7CD1D0002741B /* addMusic.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

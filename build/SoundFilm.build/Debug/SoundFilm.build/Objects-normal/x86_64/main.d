@@ -30,4 +30,5 @@ dependencies: /Users/Peter/SoundFilm/SoundFilm/SoundFilm/main.cpp \
   /usr/local/include/opencv2/imgproc/types_c.h \
   /usr/local/include/opencv2/imgcodecs/imgcodecs_c.h \
   /usr/local/include/opencv2/videoio/videoio_c.h \
-  /Users/Peter/SoundFilm/SoundFilm/SoundFilm/sceneDetect.hpp
+  /Users/Peter/SoundFilm/SoundFilm/SoundFilm/sceneDetect.hpp \
+  /Users/Peter/SoundFilm/SoundFilm/SoundFilm/addMusic.hpp

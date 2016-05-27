@@ -62,7 +62,7 @@ double cmpHist(Mat& last, Mat& current) {
     return diff;
 }
 
-void detect(string fname) {
+int detect(string fname) {
     VideoCapture vid;
     vid.open(fname);
     if(!vid.isOpened()) {
@@ -176,10 +176,10 @@ void detect(string fname) {
     
     vid.release();
     
-    
+    return index;
 }
 
-void comparePic(string fname1, string fname2) {
+bool comparePic(string fname1, string fname2) {
     Mat frame1, frame2;
     frame1 = imread(fname1);
     frame2 = imread(fname2);
@@ -187,13 +187,13 @@ void comparePic(string fname1, string fname2) {
     throw "Error when opening the file";
     }
     cout << "open file successful" << endl;
-    
-    cmpHist(frame1, frame2);
-    /*if(diff > z) {
-        cout << "images are different and z value is " << z_cal << endl;
+    double diff = cmpHist(frame1, frame2);
+    if(diff > 2) {
+        return true;
     } else {
-        cout << "images are NOT different and z value is " << z_cal << endl;
-    }*/
+        return false;
+    }
 
-    cout << "image compare end" << endl;
+    //cout << "image compare end" << endl;
+    return false;
 }

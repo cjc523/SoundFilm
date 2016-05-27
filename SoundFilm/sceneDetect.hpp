@@ -2,7 +2,7 @@
 //  sceneDetect.hpp
 //  SoundFilm
 //
-//  Created by Peter Chen on 19/05/2016.
+//  Created by Jiacheng Chen on 19/05/2016.
 //  Copyright © 2016 a. All rights reserved.
 //
 
@@ -15,8 +15,8 @@
 using namespace std;
 using namespace cv;
 
-void detect(string fname);
+int detect(string fname);
 double cmpHist(Mat& last, Mat& current);
-void comparePic(string fname1, string fname2);
+bool comparePic(string fname1, string fname2);
 
 #endif /* sceneDetect_hpp */
