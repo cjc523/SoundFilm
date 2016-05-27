@@ -109,7 +109,7 @@ int detect(string fname) {
                 ostringstream cmd;
                 ostringstream cmd2;
                 cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
-                << curr_time - last_time /*<< " /Resources/output/video/"*/ << " "<< index << ".mp4" << endl;
+                << curr_time - last_time << " Resources/output/video/" << index << ".mp4" << endl;
                 cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
                 << index << ".jpeg" << endl;
                 index++;
@@ -142,7 +142,7 @@ int detect(string fname) {
                 ostringstream cmd;
                 ostringstream cmd2;
                 cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
-                    << curr_time - last_time /*<< " /Resources/output/video/"*/ << " "<< index << ".mp4" << endl;
+                    << curr_time - last_time << " Resources/output/video/" << index << ".mp4" << endl;
                 cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
                 << index << ".jpeg" << endl;
                 index++;
@@ -164,7 +164,7 @@ int detect(string fname) {
     ostringstream cmd2;
     ostringstream cmd;
     cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
-        << frameCount/fps - last_time /*<< " /Resources/output/video/"*/ << " " << index << ".mp4" << endl;
+        << frameCount/fps - last_time << " Resources/output/video/" << index << ".mp4" << endl;
     cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
     << index << ".jpeg" << endl;
     system(cmd.str().c_str());

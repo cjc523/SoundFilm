@@ -37,11 +37,11 @@ void addMusic(int totalClips) {
         int min = 1;
         int ran = rand()%(max-min + 1) + min;
         
-        outputFile << "file '" << i << ".wav" << endl;
+        outputFile << "file 'Resources/output/audio/" << i << ".wav'" << endl;
         song[i] = ran;
         ostringstream cmd;
         cmd << "ffmpeg -ss " << 0 << " -i Resources/Audio/Moderate/" << ran << ".wav" << " -t "
-            << duration /*<< " /Resources/output/video/"*/ << " " << i << ".wav" << endl;
+            << duration << " Resources/output/audio/" << i << ".wav" << endl;
         system(cmd.str().c_str());
         
         vid.release();
@@ -50,6 +50,6 @@ void addMusic(int totalClips) {
     outputFile.close();
     
     ostringstream cmd;
-    cmd << "ffmpeg -f concat -i music.txt -c copy output.wav" << endl;
+    cmd << "ffmpeg -f concat -i music.txt -c copy Resources/output/output.wav" << endl;
     system(cmd.str().c_str());
 }
