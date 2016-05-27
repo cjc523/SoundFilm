@@ -55,7 +55,7 @@ double cmpHist(Mat& last, Mat& current) {
     //cout << "hist last: " << hist_last << endl;
     //cout << "hist next: " << hist_current << endl;
         diff = compareHist( hist_last, hist_current, compare_method );
-        printf( " Method [%d] Difference : %f\n", 2, diff );
+        //printf( " Method [%d] Difference : %f\n", 2, diff );
     //}
     
     //printf( "Done \n" );
@@ -80,11 +80,14 @@ void detect(string fname) {
         cout << "starting scene detection" << endl;
     vid.read(current_frame);
     Mat next_frame;
-    int j = 0;
+    int k = 0;
     int timestamp = 0;
     double diff_last = 0;
+    double last_time = 0;
+    double curr_time = 0;
+    double index = 1;
     for (int i = 1; i < frameCount-fps; i+=fps ) {
-        if(j%2 == 0) {
+        if(k%2 == 0) {
             //cout << "current frame is " << vid.get(CV_CAP_PROP_POS_FRAMES) << endl;
             //if(floor(fmod(vid.get(CV_CAP_PROP_POS_FRAMES),fps/2)) == 0) {
             for (int j = 0; j < fps; j++) {
@@ -93,14 +96,28 @@ void detect(string fname) {
             //imshow("Display", next_frame);
             //waitKey(500);
             //cout << "detecting at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s" << endl;
-            cout << "next frame is " << vid.get(CV_CAP_PROP_POS_FRAMES) << endl;
+            //cout << "next frame is " << vid.get(CV_CAP_PROP_POS_FRAMES) << endl;
             double diff = cmpHist(current_frame, next_frame);
-            if (fabs((diff - diff_last)/diff_last) >= 0.8) {
-                if(vid.get(CV_CAP_PROP_POS_FRAMES) - timestamp > 8*fps) {
+            if ((fabs((diff - diff_last)/diff_last) >= 0.98 && fabs((diff - diff_last)/diff_last) < 1.2)
+                || (fabs((diff - diff_last)/diff_last) >= 10 && fabs((diff - diff_last)/diff_last) < 20)) {
+                if(vid.get(CV_CAP_PROP_POS_FRAMES) - timestamp > 2.5*fps) {
                     cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s" << endl;
-                    cout << "diffrence is " << diff << endl;
-                    timestamp = vid.get(CV_CAP_PROP_POS_FRAMES);
+                    //cout << "diffrence is " << fabs((diff - diff_last)/diff_last) << endl;
                 }
+                timestamp = vid.get(CV_CAP_PROP_POS_FRAMES);
+                curr_time = vid.get(CV_CAP_PROP_POS_MSEC)/1000;
+                ostringstream cmd;
+                ostringstream cmd2;
+                cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
+                << curr_time - last_time /*<< " /Resources/output/video/"*/ << " "<< index << ".mp4" << endl;
+                cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
+                << index << ".jpeg" << endl;
+                index++;
+                //cout << "index is " << index << endl;
+                system(cmd.str().c_str());
+                system(cmd2.str().c_str());
+                last_time = curr_time;
+                
             }
             diff_last = diff;
         } else {
@@ -114,22 +131,44 @@ void detect(string fname) {
             //cout << "detecting at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s" << endl;
             cout << "next frame is " << vid.get(CV_CAP_PROP_POS_FRAMES) << endl;
             double diff = cmpHist(next_frame, current_frame);
-            if (fabs((diff - diff_last)/diff_last) >= 0.8) {
-                if(vid.get(CV_CAP_PROP_POS_FRAMES) - timestamp > 8*fps) {
+            if ((fabs((diff - diff_last)/diff_last) >= 0.98 && fabs((diff - diff_last)/diff_last) < 1.2)
+                || (fabs((diff - diff_last)/diff_last) >= 10 && fabs((diff - diff_last)/diff_last) < 20)) {
+                if(vid.get(CV_CAP_PROP_POS_FRAMES) - timestamp > 2.5*fps) {
                     cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s" << endl;
-                    cout << "diffrence is " << diff << endl;
-                    timestamp = vid.get(CV_CAP_PROP_POS_FRAMES);
+                    //cout << "diffrence is " << fabs((diff - diff_last)/diff_last) << endl;
                 }
+                timestamp = vid.get(CV_CAP_PROP_POS_FRAMES);
+                curr_time = vid.get(CV_CAP_PROP_POS_MSEC)/1000;
+                ostringstream cmd;
+                ostringstream cmd2;
+                cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
+                    << curr_time - last_time /*<< " /Resources/output/video/"*/ << " "<< index << ".mp4" << endl;
+                cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
+                << index << ".jpeg" << endl;
+                index++;
+                //cout << "index is " << index << endl;
+                system(cmd.str().c_str());
+                system(cmd2.str().c_str());
+                last_time = curr_time;
             }
             diff_last = diff;
         }
+        
+        //k = vid.get(CV_CAP_PROP_POS_FRAMES);
         /*last_frame = current_frame;
         cout << "last = current "<< endl;
         imshow( "Display", last_frame );
         waitKey(1000);*/
         // }
     }
-        
+    ostringstream cmd2;
+    ostringstream cmd;
+    cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
+        << frameCount/fps - last_time /*<< " /Resources/output/video/"*/ << " " << index << ".mp4" << endl;
+    cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
+    << index << ".jpeg" << endl;
+    system(cmd.str().c_str());
+    system(cmd2.str().c_str());
         cout << "scene detect end" << endl;
     //} else {
     //    throw "Error when reading first frame";
