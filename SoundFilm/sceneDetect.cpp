@@ -110,8 +110,8 @@ int detect(string fname) {
                 ostringstream cmd2;
                 cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
                 << curr_time - last_time << " Resources/output/video/" << index << ".mp4" << endl;
-                cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
-                << index << ".jpeg" << endl;
+                cmd2 << "ffmpeg -i " << " Resources/output/video/" << index << ".mp4" << " -ss " << (curr_time - last_time)/2
+                    << " -vframes 1 " << " Resources/output/video/" << index << ".jpeg" << endl;
                 index++;
                 //cout << "index is " << index << endl;
                 system(cmd.str().c_str());
@@ -143,8 +143,8 @@ int detect(string fname) {
                 ostringstream cmd2;
                 cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
                     << curr_time - last_time << " Resources/output/video/" << index << ".mp4" << endl;
-                cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
-                << index << ".jpeg" << endl;
+                cmd2 << "ffmpeg -i " << " Resources/output/video/" << index << ".mp4" << " -ss " << (curr_time - last_time)/2
+                    << " -vframes 1 " << " Resources/output/video/" << index << ".jpeg" << endl;
                 index++;
                 //cout << "index is " << index << endl;
                 system(cmd.str().c_str());
@@ -165,8 +165,8 @@ int detect(string fname) {
     ostringstream cmd;
     cmd << "ffmpeg -ss " << last_time << " -i " << fname << " -t "
         << frameCount/fps - last_time << " Resources/output/video/" << index << ".mp4" << endl;
-    cmd2 << "ffmpeg -i " << index << ".mp4" << " -ss " << (curr_time - last_time)/2 + last_time << " -vframes 1 "
-    << index << ".jpeg" << endl;
+    cmd2 << "ffmpeg -i " << " Resources/output/video/" << index << ".mp4" << " -ss " << (curr_time - last_time)/2
+        << " -vframes 1 " << " Resources/output/video/" << index << ".jpeg" << endl;
     system(cmd.str().c_str());
     system(cmd2.str().c_str());
         cout << "scene detect end" << endl;

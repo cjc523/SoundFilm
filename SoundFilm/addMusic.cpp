@@ -23,7 +23,7 @@ void addMusic(int totalClips) {
     
     for (int i = 1; i <= totalClips; i++) {
         ostringstream fname;
-        fname << i << ".mp4";
+        fname << i << ".mp4" << endl;
         
         VideoCapture vid;
         vid.open(fname.str());
