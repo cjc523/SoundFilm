@@ -71,7 +71,7 @@ int detect(string fname) {
     cout << "open file successful" << endl;
     int fps = round(vid.get(CV_CAP_PROP_FPS));
     Mat current_frame;
-    
+    system("rm -rf Resources/output/video/*");
     //double last_timestamp = 0;
     //double current_timeStamp;
     int frameCount = vid.get(CV_CAP_PROP_FRAME_COUNT);
@@ -175,7 +175,7 @@ int detect(string fname) {
     //}
     
     vid.release();
-    
+    system("rm -rf Resources/output/video/*");
     return index;
 }
 
