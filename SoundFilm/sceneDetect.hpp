@@ -17,6 +17,6 @@ using namespace cv;
 
 int detect(string fname);
 double cmpHist(Mat& last, Mat& current);
-bool comparePic(string fname1, string fname2);
+void comparePic(string fname1, string fname2);
 
 #endif /* sceneDetect_hpp */

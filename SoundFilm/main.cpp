@@ -19,11 +19,11 @@ int main( int argc, char** argv )
     if(argc <= 1) {
         throw "No input file.";
     } else if (argc == 2) {
-        /*
+        
          String fname = argv[1];
         int index = detect(fname);
-         */
-        addMusic(21);
+        
+        //addMusic(index);
     } else {
         String fname = argv[1];
         String fname2 = argv[2];
