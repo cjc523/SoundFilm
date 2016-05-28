@@ -7,6 +7,7 @@
 //
 
 #include "addMusic.hpp"
+#include "sceneDetect.hpp"
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -37,8 +38,20 @@ void addMusic(int totalClips) {
         int min = 1;
         int ran = rand()%(max-min + 1) + min;
         //cout << duration << endl;
+        
         outputFile << "file 'Resources/output/audio/" << i << ".wav'" << endl;
         song[i] = ran;
+        time[ran] = duration;
+        for (int j = i; j >= 0; j--) {
+            if (song.find(j) == song.end()) {
+                if (compareVid(i,j)) {
+                    song[i] = song[j];
+                    duration += time[song[i]];
+                    time[ran] = duration;
+                }
+            }
+        }
+        
         ostringstream cmd;
         cmd << "ffmpeg -ss " << 0 << " -i Resources/Audio/Moderate/" << ran << ".wav" << " -t "
             << duration << " Resources/output/audio/" << i << ".wav" << endl;
@@ -51,5 +64,4 @@ void addMusic(int totalClips) {
     ostringstream cmd;
     cmd << "ffmpeg -f concat -i music.txt -c copy Resources/output.wav" << endl;
     system(cmd.str().c_str());
-    system("rm -rf Resources/output/audio/*");
 }

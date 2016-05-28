@@ -23,12 +23,13 @@ int main( int argc, char** argv )
          String fname = argv[1];
         int index = detect(fname);
         
-        //addMusic(index);
+        addMusic(index);
     } else {
         String fname = argv[1];
         String fname2 = argv[2];
         comparePic(fname, fname2);
     }
-    
+    //system("rm -rf Resources/output/video/*");
+    //system("rm -rf Resources/output/audio/*");
     cout << "finished processing" << endl;
 }
