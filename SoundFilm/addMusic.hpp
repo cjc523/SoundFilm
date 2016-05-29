@@ -10,7 +10,8 @@
 #define addMusic_hpp
 
 #include <stdio.h>
+#include <iostream>
 
-void addMusic(int totalCilps);
+void addMusic(std::string fname, int totalCilps);
 
 #endif /* addMusic_hpp */

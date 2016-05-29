@@ -23,10 +23,20 @@ int main( int argc, char** argv )
          String fname = argv[1];
         int index = detect(fname);
         
-        addMusic(index);
+        addMusic(fname, index);
+        /*
+        VideoCapture vid;
+        vid.open(fname);
+        if(!vid.isOpened()) {
+            throw "Error when opening the file";
+        }
+        double fps = vid.get(CV_CAP_PROP_FPS);
+        double frameCount = vid.get(CV_CAP_PROP_FRAME_COUNT);
+        cout << fps  << " " << frameCount << " " << getTimecode(fps, frameCount) << endl;;
+         */
     } else {
-        String fname = argv[1];
-        String fname2 = argv[2];
+        string fname = argv[1];
+        string fname2 = argv[2];
         comparePic(fname, fname2);
     }
     //system("rm -rf Resources/output/video/*");
