@@ -15,10 +15,10 @@
 using namespace std;
 using namespace cv;
 
-int detect(string fname);
-double cmpHist(Mat& last, Mat& current);
+int detect(string fname, int method, double threshold);
+double cmpHist(Mat& last, Mat& current, int compare_method);
 string getTimecode(double fps, double curr_frame);
-bool compareVid(int f1, int f2);
+bool compareVid(int f1, int f2, int method);
 void comparePic(string fname1, string fname2);
 
 #endif /* sceneDetect_hpp */

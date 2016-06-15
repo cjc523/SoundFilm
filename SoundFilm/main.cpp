@@ -14,16 +14,18 @@
 
 using namespace std;
 using namespace cv;
+
 int main( int argc, char** argv )
 {
     if(argc <= 1) {
         throw "No input file.";
-    } else if (argc == 2) {
+    } else if (argc == 4) {
         
-         String fname = argv[1];
-        int index = detect(fname);
-        
-        addMusic(fname, index);
+        String fname = argv[1];
+        int method = atoi(argv[2]);
+        double threshold = atof(argv[3]);
+        int index = detect(fname, method, threshold);
+        //addMusic(fname, index);
         /*
         VideoCapture vid;
         vid.open(fname);

@@ -33,7 +33,7 @@ void addMusic(string fname, int totalClips) {
         double fps = vid.get(CV_CAP_PROP_FPS);
         double frameCount = vid.get(CV_CAP_PROP_FRAME_COUNT);
         string duration = getTimecode(fps, frameCount);
-        int max = 14;
+        int max = 9;
         int min = 1;
         int ran = rand()%(max-min + 1) + min;
         //cout << duration << endl;
@@ -66,7 +66,7 @@ void addMusic(string fname, int totalClips) {
         }*/
         
         ostringstream cmd;
-        cmd << "ffmpeg -ss 00:00:00.000 -i Resources/Audio/Moderate/" << ran << ".wav" << " -t "
+        cmd << "ffmpeg -ss 00:00:00.000 -i Resources/Audio/Slow/" << ran << ".wav" << " -t "
             << duration << " Resources/output/audio/" << i << ".wav" << endl;
         system(cmd.str().c_str());
         //cout << cmd.str() << endl;

@@ -17,30 +17,23 @@
 using namespace std;
 using namespace cv;
 
-double cmpHist(Mat& last, Mat& current) {
+double cmpHist(Mat& last, Mat& current, int compare_method) {
     // Adopted from a demo on openCV tutorial:
     // http://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.html
     Mat hsv_last, hsv_current;
     
-    /// Convert to HSV
     cvtColor( last, hsv_last, COLOR_BGR2HSV );
     cvtColor( current, hsv_current, COLOR_BGR2HSV );
     
-    /// Using 50 bins for hue and 60 for saturation
     int h_bins = 50; int s_bins = 60;
     int histSize[] = { h_bins, s_bins };
-    
-    // hue varies from 0 to 179, saturation from 0 to 255
     float h_ranges[] = { 0, 180 };
     float s_ranges[] = { 0, 256 };
     
     const float* ranges[] = { h_ranges, s_ranges };
     
-    // Use the o-th and 1-st channels
     int channels[] = { 0, 1 };
     
-    
-    /// Histograms
     MatND hist_last;
     MatND hist_current;
     
@@ -53,7 +46,6 @@ double cmpHist(Mat& last, Mat& current) {
     /// Apply the histogram comparison methods
     double diff = 0;
     //for( int i = 0; i < 4; i++ ) {
-        int compare_method = 3;
     //cout << "hist last: " << hist_last << endl;
     //cout << "hist next: " << hist_current << endl;
         diff = compareHist( hist_last, hist_current, compare_method );
@@ -106,9 +98,9 @@ string getTimecode(double fps, double curr_frame) {
     return timecode.str();
 }
 
-bool joinVideo(int i, int j) {
+bool joinVideo(int i, int j, int method) {
     if (j > 0) {
-        if (compareVid(i, j)) {
+        if (compareVid(i, j, method)) {
             ofstream outputFile("Resources/output/video/temp.txt");
             outputFile << "file " << j << ".mp4" << endl;
             outputFile << "file " << i << ".mp4" << endl;
@@ -131,7 +123,7 @@ bool joinVideo(int i, int j) {
     return false;
 }
 
-int detect(string fname) {
+int detect(string fname, int method, double threshold) {
     VideoCapture vid;
     vid.open(fname);
     if(!vid.isOpened()) {
@@ -157,6 +149,7 @@ int detect(string fname) {
     double last_time = 0;
     double curr_time = 0;
     double index = 1;
+    bool ifDiff;
     for (int i = 1; i < frameCount; i+=2 ) {
         if(k%2 != 0) {
             //if(floor(fmod(vid.get(CV_CAP_PROP_POS_FRAMES),fps/2)) == 0) {
@@ -167,15 +160,20 @@ int detect(string fname) {
             //waitKey(500);
             //cout << "detecting at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s" << endl;
             //cout << "next frame is " << vid.get(CV_CAP_PROP_POS_FRAMES) << endl;
-            double diff = cmpHist(current_frame, next_frame);
-            
-            if(diff > 0.5) {
+            double diff = cmpHist(current_frame, next_frame, method);
+            if (method == 0 || method == 2) {
+                ifDiff = diff < threshold;
+            } else {
+                ifDiff = diff > threshold;
+            }
+            if(ifDiff) {
                 if(vid.get(CV_CAP_PROP_POS_FRAMES) - timestamp > 2.5*fps) {
-                    /*cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s" << endl;
-                    cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_FRAMES) << " frame" << endl;
-                    cout << "diffrence is " << diff << endl;*/
+                    //cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s ";
+                    //cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_FRAMES) << " frame" << endl;
+                    //cout << " and diffrence is " << diff << endl;
                     //curr_time = vid.get(CV_CAP_PROP_POS_MSEC)/1000;
                     curr_time = vid.get(CV_CAP_PROP_POS_FRAMES);
+                    
                     ostringstream cmd;
                     ostringstream cmd2;
                     
@@ -186,7 +184,7 @@ int detect(string fname) {
                     //cout << "index is " << index << endl;
                     system(cmd.str().c_str());
                     system(cmd2.str().c_str());
-                    if (!joinVideo(index, index-1)) {
+                    if (!joinVideo(index, index-1, method)) {
                         outputFile << "file " << index << ".mp4" << endl;
                         index++;
                     }
@@ -211,15 +209,21 @@ int detect(string fname) {
             //waitKey(500);
             //cout << "detecting at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s" << endl;
             //cout << "next frame is " << vid.get(CV_CAP_PROP_POS_FRAMES) << endl;
-            double diff = cmpHist(next_frame, current_frame);
+            double diff = cmpHist(next_frame, current_frame, method);
             
-            if(diff > 0.5) {
+            if (method == 0 || method == 2) {
+                ifDiff = diff < threshold;
+            } else {
+                ifDiff = diff > threshold;
+            }
+            if(ifDiff) {
                 if(vid.get(CV_CAP_PROP_POS_FRAMES) - timestamp > 2.5*fps) {
-                    /*cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s" << endl;
-                    cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_FRAMES) << " frame" << endl;
-                    cout << "diffrence is " << diff << endl;*/
+                    //cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_MSEC)/1000 << "s ";
+                    //cout << "scene changed at " << vid.get(CV_CAP_PROP_POS_FRAMES) << " frame" << endl;
+                    //cout << "and diffrence is " << diff << endl;
                     //curr_time = vid.get(CV_CAP_PROP_POS_MSEC)/1000;
                     curr_time = vid.get(CV_CAP_PROP_POS_FRAMES);
+                    
                     ostringstream cmd;
                     ostringstream cmd2;
                     
@@ -230,10 +234,12 @@ int detect(string fname) {
                     //cout << "index is " << index << endl;
                     system(cmd.str().c_str());
                     system(cmd2.str().c_str());
-                    if (!joinVideo(index, index-1)) {
+                     
+                    if (!joinVideo(index, index-1, method)) {
                         outputFile << "file " << index << ".mp4" << endl;
                         index++;
                     }
+                    
                     //cout << cmd.str() << endl;
                     //cout << cmd2.str() << endl;
                 }
@@ -266,6 +272,7 @@ int detect(string fname) {
     //cout << cmd.str() << endl;
     //cout << cmd2.str() << endl;
     system("ffmpeg -f concat -i Resources/output/video/video.txt -c copy Resources/output.mp4");
+     
         cout << "scene detect end" << endl;
     //} else {
     //    throw "Error when reading first frame";
@@ -276,7 +283,7 @@ int detect(string fname) {
     return index;
 }
 
-bool compareVid(int f1, int f2) {
+bool compareVid(int f1, int f2, int method) {
     Mat src_base, src_test1;
     ostringstream fname1;
     ostringstream fname2;
@@ -287,7 +294,7 @@ bool compareVid(int f1, int f2) {
     
     src_base = imread(fname1.str());
     src_test1 = imread(fname2.str());
-    double diff = cmpHist(src_base, src_test1);
+    double diff = cmpHist(src_base, src_test1, method);
     if (diff < 0.6) {
         return true;
     }
