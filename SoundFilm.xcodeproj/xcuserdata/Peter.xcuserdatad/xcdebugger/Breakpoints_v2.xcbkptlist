@@ -45,7 +45,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "118"
             endingLineNumber = "118"
-            landmarkName = "joinVideo(int i, int j, int method)"
+            landmarkName = "convertTime(int h, int m, int s)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -61,7 +61,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "102"
             endingLineNumber = "102"
-            landmarkName = "joinVideo(int i, int j, int method)"
+            landmarkName = "timeCal(string time1, string time2, bool ifPlus)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

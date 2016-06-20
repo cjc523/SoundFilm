@@ -12,6 +12,6 @@
 #include <stdio.h>
 #include <iostream>
 
-void addMusic(std::string fname, int totalCilps);
+void addMusic(std::string fname, int totalCilps, int method, double threshold);
 
 #endif /* addMusic_hpp */

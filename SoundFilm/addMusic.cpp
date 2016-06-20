@@ -23,7 +23,7 @@ struct Scene {
     string time = "00:00:00";
 };
 
-void addMusic(string fname, int totalClips) {
+void addMusic(string fname, int totalClips, int method, double threshold) {
     Scene * list = new Scene[totalClips];
     system("rm -rf Resources/output/audio/*");
     ofstream outputFile("Resources/output/audio/music.txt");
@@ -49,7 +49,7 @@ void addMusic(string fname, int totalClips) {
         list[i-1].mid = ran;
         //list[i-1].time = timeCal(list[i-1].time, duration, true);
         for (int j = i-2; j > 0; j--) {
-            if (compareVid(i, j, 3)) {
+            if (compareVid(i, j, method, threshold)) {
                 list[i-1].mid = list[j-1].mid;
                 list[i-1].time = list[j-1].time;
                 ran = list[i-1].mid;

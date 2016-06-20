@@ -20,7 +20,6 @@ string convertTime(int h, int m, int s);
 int detect(string fname, int method, double threshold);
 double cmpHist(Mat& last, Mat& current, int compare_method);
 string getTimecode(double fps, double curr_frame);
-bool compareVid(int f1, int f2, int method);
-void comparePic(string fname1, string fname2);
+bool compareVid(int f1, int f2, int method, double threshold);
 
 #endif /* sceneDetect_hpp */
