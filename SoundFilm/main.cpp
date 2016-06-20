@@ -25,7 +25,7 @@ int main( int argc, char** argv )
         int method = atoi(argv[2]);
         double threshold = atof(argv[3]);
         int index = detect(fname, method, threshold);
-        //addMusic(fname, index);
+        addMusic(fname, index);
         /*
         VideoCapture vid;
         vid.open(fname);
@@ -36,6 +36,8 @@ int main( int argc, char** argv )
         double frameCount = vid.get(CV_CAP_PROP_FRAME_COUNT);
         cout << fps  << " " << frameCount << " " << getTimecode(fps, frameCount) << endl;;
          */
+    } else if (argc == 3) {
+        cout << timeCal(argv[1], argv[2], true) << endl;
     } else {
         string fname = argv[1];
         string fname2 = argv[2];

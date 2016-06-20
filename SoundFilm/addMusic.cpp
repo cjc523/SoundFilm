@@ -17,13 +17,19 @@
 using namespace std;
 using namespace cv;
 
+struct Scene {
+    int id;
+    int mid;
+    string time = "00:00:00";
+};
+
 void addMusic(string fname, int totalClips) {
-    map<int, int> song;
-    map<int, double> time;
+    Scene * list = new Scene[totalClips];
     system("rm -rf Resources/output/audio/*");
     ofstream outputFile("Resources/output/audio/music.txt");
     for (int i = 1; i <= totalClips; i++) {
         ostringstream vname;
+        
         vname << "Resources/output/video/" << i <<".mp4";
         VideoCapture vid;
         vid.open(vname.str());
@@ -37,37 +43,24 @@ void addMusic(string fname, int totalClips) {
         int min = 1;
         int ran = rand()%(max-min + 1) + min;
         //cout << duration << endl;
-        
         outputFile << "file " << i << ".wav" << endl;
-        /*
-        bool found = false;
-        for (int j = i; j > 1; j--) {
-            if (song[j] != 0) {
-                if (compareVid(i,j)) {
-                    song[i] = song[j];
-                    ran = song[j];
-                    time[ran] += duration;
-                    found = true;
-                    break;
-                } else {
-                }
+        
+        list[i-1].id = i;
+        list[i-1].mid = ran;
+        //list[i-1].time = timeCal(list[i-1].time, duration, true);
+        for (int j = i-2; j > 0; j--) {
+            if (compareVid(i, j, 3)) {
+                list[i-1].mid = list[j-1].mid;
+                list[i-1].time = list[j-1].time;
+                ran = list[i-1].mid;
+                break;
             }
         }
         
-        if (!found) {
-            if (time.count(ran) != 0) {
-                do {
-                    ran = rand()%(max-min + 1) + min;
-                } while (time.count(ran) != 0);
-            } else {
-                time[ran] = 0;
-            }
-            song[i] = ran;
-        }*/
-        
         ostringstream cmd;
-        cmd << "ffmpeg -ss 00:00:00.000 -i Resources/Audio/Slow/" << ran << ".wav" << " -t "
+        cmd << "ffmpeg -ss " << list[i-1].time << " -i Resources/Audio/Slow/" << ran << ".wav" << " -t "
             << duration << " Resources/output/audio/" << i << ".wav" << endl;
+        list[i-1].time = timeCal(list[i-1].time, duration, true);
         system(cmd.str().c_str());
         //cout << cmd.str() << endl;
         vid.release();

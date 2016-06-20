@@ -15,6 +15,8 @@
 using namespace std;
 using namespace cv;
 
+string timeCal(string time1, string time2, bool ifPlus);
+string convertTime(int h, int m, int s);
 int detect(string fname, int method, double threshold);
 double cmpHist(Mat& last, Mat& current, int compare_method);
 string getTimecode(double fps, double curr_frame);

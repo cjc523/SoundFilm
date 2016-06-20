@@ -13,6 +13,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 using namespace cv;
@@ -68,33 +69,76 @@ string getTimecode(double fps, double curr_frame) {
     i_min = floor(i_sec / 60);
     i_sec = i_sec % 60;
     
-    if (i_hr < 10) {
-        hr << 0 << i_hr;
-    } else {
-        hr << i_hr;
-    }
-    if (i_min < 10) {
-        min << 0 << i_min;
-    } else {
-        min << i_min;
-    }
-    if (i_sec < 10) {
-        sec << 0 << i_sec;
-    } else {
-        sec << i_sec;
-    }
-    if (i_f < 100) {
-        if (i_f < 10) {
-            f << 00 << i_f;
-        } else {
-            f << 0 << i_f;
+    return convertTime(i_hr, i_min, i_sec);
+}
+
+string timeCal(string time1, string time2, bool ifPlus) {
+    istringstream stream1 (time1);
+    istringstream stream2 (time2);
+    int h1, m1, s1, h2, m2, s2, h, s, m;
+    char temp;
+    stream1 >> h1 >> temp >> m1 >> temp >> s1;
+    stream2 >> h2 >> temp >> m2 >> temp >> s2;
+    if (ifPlus) {
+        s = s1 + s2;
+        m = m1 + m2;
+        h = h1 + h2;
+        if(s >= 60) {
+            m += s / 60;
+            s %= 60;
+        }
+        if (m >= 60) {
+            m %= 60;
+            h += m / 60;
         }
     } else {
-        f << i_f;
+        s = s1 - s2;
+        m = m1 - m2;
+        h = h1 - h2;
+        if (s < 0) {
+            s += 60;
+            m -= 1;
+        }
+        if (m < 0) {
+            m += 60;
+            h -= 1;
+        }
     }
     
     
-    timecode << hr.str() << ":" << min.str() << ":" << sec.str() <<  "." << f.str();
+    return convertTime(h, m, s);
+}
+
+string convertTime(int h, int m, int s) {
+    ostringstream timecode, hr, min, sec, f;
+    
+    if (h < 10) {
+        hr << 0 << h;
+    } else {
+        hr << h;
+    }
+    if (m < 10) {
+        min << 0 << m;
+    } else {
+        min << m;
+    }
+    if (s < 10) {
+        sec << 0 << s;
+    } else {
+        sec << s;
+    }
+    /*if (i_f < 100) {
+     if (i_f < 10) {
+     f << 00 << i_f;
+     } else {
+     f << 0 << i_f;
+     }
+     } else {
+     f << i_f;
+     }*/
+    
+    
+    timecode << hr.str() << ":" << min.str() << ":" << sec.str();
     return timecode.str();
 }
 
@@ -134,7 +178,7 @@ int detect(string fname, int method, double threshold) {
     Mat current_frame;
     Mat temp_frame;
     system("rm -rf Resources/output/video/*");
-    ofstream outputFile("Resources/output/video/video.txt");
+    //ofstream outputFile("Resources/output/video/video.txt");
     //double last_timestamp = 0;
     //double current_timeStamp;
     int frameCount = vid.get(CV_CAP_PROP_FRAME_COUNT);
@@ -148,6 +192,9 @@ int detect(string fname, int method, double threshold) {
     double diff_last = 0;
     double last_time = 0;
     double curr_time = 0;
+    string last_timecode = "00:00:00";
+    string curr_timecode = "00:00:00";
+    string duration = "00:00:00";
     double index = 1;
     bool ifDiff;
     for (int i = 1; i < frameCount; i+=2 ) {
@@ -177,24 +224,28 @@ int detect(string fname, int method, double threshold) {
                     ostringstream cmd;
                     ostringstream cmd2;
                     
-                    cmd << "ffmpeg -ss " << getTimecode(fps, last_time) << " -i " << fname << " -t "
-                        << getTimecode(fps, curr_time - last_time) << " Resources/output/video/" << index << ".mp4" << endl;
+                    curr_timecode = getTimecode(fps, curr_time);
+                    last_timecode = timeCal(last_timecode, duration, true);
+                    duration = timeCal(curr_timecode, last_timecode, false);
+
+                    cmd << "ffmpeg -ss " << last_timecode << " -i " << fname << " -t "
+                        << duration << " Resources/output/video/" << index << ".mp4" << endl;
                     cmd2 << "ffmpeg -i " << " Resources/output/video/" << index << ".mp4" << " -ss " << getTimecode(fps, (curr_time - last_time)/2) << " -vframes 1 " << " Resources/output/video/" << index << ".jpeg" << endl;
 
                     //cout << "index is " << index << endl;
                     system(cmd.str().c_str());
                     system(cmd2.str().c_str());
                     if (!joinVideo(index, index-1, method)) {
-                        outputFile << "file " << index << ".mp4" << endl;
+                        //outputFile << "file " << index << ".mp4" << endl;
                         index++;
                     }
+                    
                     //cout << cmd.str() << endl;
                     //cout << cmd2.str() << endl;
                 }
                 
                 timestamp = vid.get(CV_CAP_PROP_POS_FRAMES);
                 last_time = curr_time;
-                
             }
             
             //cout << "current frame is " << vid.get(CV_CAP_PROP_POS_FRAMES) << endl;
@@ -227,8 +278,13 @@ int detect(string fname, int method, double threshold) {
                     ostringstream cmd;
                     ostringstream cmd2;
                     
-                    cmd << "ffmpeg -ss " << getTimecode(fps, last_time) << " -i " << fname << " -t "
-                    << getTimecode(fps, curr_time - last_time) << " Resources/output/video/" << index << ".mp4" << endl;
+                    
+                    curr_timecode = getTimecode(fps, curr_time);
+                    last_timecode = timeCal(last_timecode, duration, true);
+                    duration = timeCal(curr_timecode, last_timecode, false);
+
+                    cmd << "ffmpeg -ss " << last_timecode << " -i " << fname << " -t "
+                    << duration << " Resources/output/video/" << index << ".mp4" << endl;
                     cmd2 << "ffmpeg -i " << " Resources/output/video/" << index << ".mp4" << " -ss " << getTimecode(fps, (curr_time - last_time)/2) << " -vframes 1 " << " Resources/output/video/" << index << ".jpeg" << endl;
                     
                     //cout << "index is " << index << endl;
@@ -236,7 +292,7 @@ int detect(string fname, int method, double threshold) {
                     system(cmd2.str().c_str());
                      
                     if (!joinVideo(index, index-1, method)) {
-                        outputFile << "file " << index << ".mp4" << endl;
+                        //outputFile << "file " << index << ".mp4" << endl;
                         index++;
                     }
                     
@@ -262,16 +318,18 @@ int detect(string fname, int method, double threshold) {
     
     ostringstream cmd2;
     ostringstream cmd;
-    cmd << "ffmpeg -ss " << getTimecode(fps, last_time) << " -i " << fname << " -t "
+    last_timecode = timeCal(last_timecode, duration, true);
+    duration = timeCal(getTimecode(fps, frameCount), last_timecode, false);
+    cmd << "ffmpeg -ss " << last_timecode << " -i " << fname << " -t "
         << getTimecode(fps, frameCount - last_time) << " Resources/output/video/" << index << ".mp4" << endl;
     cmd2 << "ffmpeg -i " << " Resources/output/video/" << index << ".mp4" << " -ss " << getTimecode(fps, (frameCount - last_time)/2)
         << " -vframes 1 " << " Resources/output/video/" << index << ".jpeg" << endl;
     system(cmd.str().c_str());
     system(cmd2.str().c_str());
-    outputFile << "file " << index << ".mp4" << endl;
+    //outputFile << "file " << index << ".mp4" << endl;
     //cout << cmd.str() << endl;
     //cout << cmd2.str() << endl;
-    system("ffmpeg -f concat -i Resources/output/video/video.txt -c copy Resources/output.mp4");
+    //system("ffmpeg -f concat -i Resources/output/video/video.txt -c copy Resources/output.mp4");
      
         cout << "scene detect end" << endl;
     //} else {
@@ -295,6 +353,7 @@ bool compareVid(int f1, int f2, int method) {
     src_base = imread(fname1.str());
     src_test1 = imread(fname2.str());
     double diff = cmpHist(src_base, src_test1, method);
+    //cout << "video " << f1 << " and " << f2 << "'s difference is " << diff << endl;
     if (diff < 0.6) {
         return true;
     }

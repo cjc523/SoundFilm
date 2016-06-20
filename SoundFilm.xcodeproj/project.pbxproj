@@ -42,6 +42,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D04D510D1D11BFA100F712A1 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
 		D0898E611CED4C1B00444F61 /* sceneDetect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneDetect.cpp; sourceTree = "<group>"; };
 		D0898E621CED4C1B00444F61 /* sceneDetect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sceneDetect.hpp; sourceTree = "<group>"; };
 		D0DECDC51CE818D800088659 /* SoundFilm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SoundFilm; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				D0DECDC81CE818D800088659 /* main.cpp */,
+				D04D510D1D11BFA100F712A1 /* Application.xib */,
 				D0898E611CED4C1B00444F61 /* sceneDetect.cpp */,
 				D0E701F11CF7CD1D0002741B /* addMusic.cpp */,
 				D0E701F21CF7CD1D0002741B /* addMusic.hpp */,
